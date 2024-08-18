@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/bryopsida/go-grpc-server-template/interfaces"
-	"github.com/dgraph-io/badger"
+	"github.com/dgraph-io/badger/v4"
 )
 
 type badgerNumberRepository struct {

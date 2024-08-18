@@ -6,18 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
-
-// MockConfig is a mock implementation of the interfaces.IConfig interface.
-type MockConfig struct {
-	mock.Mock
-}
-
-func (m *MockConfig) GetDatabasePath() string {
-	args := m.Called()
-	return args.String(0)
-}
 
 func TestGetDatabase(t *testing.T) {
 	// Create a temporary directory for the database

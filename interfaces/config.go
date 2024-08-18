@@ -4,4 +4,10 @@ package interfaces
 type IConfig interface {
 	// GetDatabasePath returns the database path
 	GetDatabasePath() string
+	GetServerAddress() string
+	GetServerPort() uint16
+	GetServerCert() string
+	GetServerKey() string
+	GetServerCA() string
+	IsTlsEnabled() bool
 }

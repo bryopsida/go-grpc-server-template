@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/bryopsida/go-grpc-server-template/interfaces"
-	"github.com/dgraph-io/badger"
+	"github.com/dgraph-io/badger/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

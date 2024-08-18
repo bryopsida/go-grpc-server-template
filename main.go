@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
+	"fmt"
 	"log"
 	"log/slog"
 	"net"
@@ -12,13 +14,16 @@ import (
 	api_v1 "github.com/bryopsida/go-grpc-server-template/api/v1"
 	"github.com/bryopsida/go-grpc-server-template/config"
 	"github.com/bryopsida/go-grpc-server-template/datastore"
+	"github.com/bryopsida/go-grpc-server-template/interfaces"
 	"github.com/bryopsida/go-grpc-server-template/repositories/number"
 	"github.com/bryopsida/go-grpc-server-template/services/increment"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 )
 
 func serveGrpc(server *grpc.Server, lis net.Listener) {
-	slog.Info("Listening on :50051")
+	address := lis.Addr().String()
+	slog.Info("Listening on ", "address", address)
 	if err := server.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
@@ -31,6 +36,51 @@ func runGrpc(ctx context.Context, server *grpc.Server, lis net.Listener) {
 	// stop the server
 	slog.Info("Shutting down gRPC server...")
 	server.GracefulStop()
+}
+
+func buildTlsCert(cert, key string) (*tls.Certificate, error) {
+	// Convert PEM strings to byte slices
+	certPEM := []byte(cert)
+	keyPEM := []byte(key)
+
+	// Parse the certificate and key
+	tlsCertificate, err := tls.X509KeyPair(certPEM, keyPEM)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse certificate and key: %v", err)
+	}
+
+	return &tlsCertificate, nil
+}
+
+func buildServerCredentials(config interfaces.IConfig) (credentials.TransportCredentials, error) {
+	cert := config.GetServerCert()
+	key := config.GetServerKey()
+	ca := config.GetServerCA()
+	if cert == "" || key == "" || ca == "" {
+		return nil, fmt.Errorf("missing required TLS configuration")
+	}
+	tlsCertificate, err := buildTlsCert(cert, key)
+	if err != nil {
+		return nil, fmt.Errorf("failed to build TLS certificate: %v", err)
+	}
+	creds := credentials.NewServerTLSFromCert(tlsCertificate)
+	return creds, nil
+}
+
+func buildGrpcOptions(config interfaces.IConfig) []grpc.ServerOption {
+	options := []grpc.ServerOption{}
+	if config.IsTlsEnabled() {
+		creds, err := buildServerCredentials(config)
+		if err != nil {
+			log.Fatalf("failed to build server credentials: %v", err)
+		}
+		options = append(options, grpc.Creds(creds))
+	}
+	return options
+}
+
+func buildGrpcServer(options []grpc.ServerOption) *grpc.Server {
+	return grpc.NewServer(options...)
 }
 
 func main() {
@@ -48,15 +98,16 @@ func main() {
 
 	slog.Info("Getting increment service")
 	service := increment.NewIncrementService(repo, "counter")
+
 	slog.Info("Creating gRPC server")
-	// Create a new gRPC server
-	server := grpc.NewServer()
+	options := buildGrpcOptions(config)
+	server := buildGrpcServer(options)
 
 	// Register the IncrementService
 	api_v1.RegisterIncrementServiceServer(server, service)
 
 	// Listen on a port
-	lis, err := net.Listen("tcp", ":50051")
+	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", config.GetServerAddress(), config.GetServerPort()))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
