@@ -11,16 +11,16 @@ import (
 )
 
 const (
-	DATABASE_PATH_KEY        = "database.path"
-	SERVER_PORT_KEY          = "server.port"
-	SERVER_ADDRESS_KEY       = "server.address"
-	SERVER_TLS_ENABLED_KEY   = "server.tls.enabled"
-	SERVER_TLS_CERT_KEY      = "server.tls.cert"
-	SERVER_TLS_CERT_PATH_KEY = "server.tls.cert_path"
-	SERVER_TLS_KEY_KEY       = "server.tls.key"
-	SERVER_TLS_KEY_PATH_KEY  = "server.tls.key_path"
-	SERVER_TLS_CA_KEY        = "server.tls.ca"
-	SERVER_TLS_CA_PATH_KEY   = "server.tls.ca_path"
+	database_path_key        = "database.path"
+	server_port_key          = "server.port"
+	server_address_key       = "server.address"
+	server_tls_enabled_key   = "server.tls.enabled"
+	server_tls_cert_key      = "server.tls.cert"
+	server_tls_cert_path_key = "server.tls.cert_path"
+	server_tls_key_key       = "server.tls.key"
+	server_tls_key_path_key  = "server.tls.key_path"
+	server_tls_ca_key        = "server.tls.ca"
+	server_tls_ca_path_key   = "server.tls.ca_path"
 )
 
 type viperConfig struct {
@@ -36,16 +36,16 @@ func NewViperConfig() interfaces.IConfig {
 }
 
 func (c *viperConfig) setDefaults() {
-	c.viper.SetDefault(DATABASE_PATH_KEY, path.Join("data", "db"))
-	c.viper.SetDefault(SERVER_PORT_KEY, 50051)
-	c.viper.SetDefault(SERVER_ADDRESS_KEY, "localhost")
-	c.viper.SetDefault(SERVER_TLS_ENABLED_KEY, false)
-	c.viper.SetDefault(SERVER_TLS_CERT_KEY, "")
-	c.viper.SetDefault(SERVER_TLS_CERT_PATH_KEY, "")
-	c.viper.SetDefault(SERVER_TLS_KEY_KEY, "")
-	c.viper.SetDefault(SERVER_TLS_KEY_PATH_KEY, "")
-	c.viper.SetDefault(SERVER_TLS_CA_KEY, "")
-	c.viper.SetDefault(SERVER_TLS_CA_PATH_KEY, "")
+	c.viper.SetDefault(database_path_key, path.Join("data", "db"))
+	c.viper.SetDefault(server_port_key, 50051)
+	c.viper.SetDefault(server_address_key, "localhost")
+	c.viper.SetDefault(server_tls_enabled_key, false)
+	c.viper.SetDefault(server_tls_cert_key, "")
+	c.viper.SetDefault(server_tls_cert_path_key, "")
+	c.viper.SetDefault(server_tls_key_key, "")
+	c.viper.SetDefault(server_tls_key_path_key, "")
+	c.viper.SetDefault(server_tls_ca_key, "")
+	c.viper.SetDefault(server_tls_ca_path_key, "")
 }
 
 func (c *viperConfig) initialize() {
@@ -57,15 +57,15 @@ func (c *viperConfig) initialize() {
 
 // GetDatabasePath returns the database path
 func (c *viperConfig) GetDatabasePath() string {
-	return c.viper.GetString(DATABASE_PATH_KEY)
+	return c.viper.GetString(database_path_key)
 }
 
 func (c *viperConfig) GetServerPort() uint16 {
-	return uint16(c.viper.GetInt(SERVER_PORT_KEY))
+	return uint16(c.viper.GetInt(server_port_key))
 }
 
 func (c *viperConfig) GetServerAddress() string {
-	return c.viper.GetString(SERVER_ADDRESS_KEY)
+	return c.viper.GetString(server_address_key)
 }
 
 func (c *viperConfig) ifNilTryPath(primaryKey string, pathKey string) string {
@@ -95,17 +95,17 @@ func (c *viperConfig) ifNilTryPath(primaryKey string, pathKey string) string {
 }
 
 func (c *viperConfig) GetServerCert() string {
-	return c.ifNilTryPath(SERVER_TLS_CERT_KEY, SERVER_TLS_CERT_PATH_KEY)
+	return c.ifNilTryPath(server_tls_cert_key, server_tls_cert_path_key)
 }
 
 func (c *viperConfig) GetServerKey() string {
-	return c.ifNilTryPath(SERVER_TLS_KEY_KEY, SERVER_TLS_KEY_PATH_KEY)
+	return c.ifNilTryPath(server_tls_key_key, server_tls_key_path_key)
 }
 
 func (c *viperConfig) GetServerCA() string {
-	return c.ifNilTryPath(SERVER_TLS_CA_KEY, SERVER_TLS_CA_PATH_KEY)
+	return c.ifNilTryPath(server_tls_ca_key, server_tls_ca_path_key)
 }
 
 func (c *viperConfig) IsTlsEnabled() bool {
-	return c.viper.GetBool(SERVER_TLS_ENABLED_KEY)
+	return c.viper.GetBool(server_tls_enabled_key)
 }
