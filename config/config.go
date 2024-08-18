@@ -10,16 +10,18 @@ import (
 	"github.com/spf13/viper"
 )
 
-const DATABASE_PATH_KEY = "database.path"
-const SERVER_PORT_KEY = "server.port"
-const SERVER_ADDRESS_KEY = "server.address"
-const SERVER_TLS_ENABLED_KEY = "server.tls.enabled"
-const SERVER_TLS_CERT_KEY = "server.tls.cert"
-const SERVER_TLS_CERT_PATH_KEY = "server.tls.cert_path"
-const SERVER_TLS_KEY_KEY = "server.tls.key"
-const SERVER_TLS_KEY_PATH_KEY = "server.tls.key_path"
-const SERVER_TLS_CA_KEY = "server.tls.ca"
-const SERVER_TLS_CA_PATH_KEY = "server.tls.ca_path"
+const (
+	DATABASE_PATH_KEY        = "database.path"
+	SERVER_PORT_KEY          = "server.port"
+	SERVER_ADDRESS_KEY       = "server.address"
+	SERVER_TLS_ENABLED_KEY   = "server.tls.enabled"
+	SERVER_TLS_CERT_KEY      = "server.tls.cert"
+	SERVER_TLS_CERT_PATH_KEY = "server.tls.cert_path"
+	SERVER_TLS_KEY_KEY       = "server.tls.key"
+	SERVER_TLS_KEY_PATH_KEY  = "server.tls.key_path"
+	SERVER_TLS_CA_KEY        = "server.tls.ca"
+	SERVER_TLS_CA_PATH_KEY   = "server.tls.ca_path"
+)
 
 type viperConfig struct {
 	viper *viper.Viper
