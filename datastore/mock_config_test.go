@@ -39,7 +39,7 @@ func (m *MockConfig) GetServerCA() string {
 	return args.String(0)
 }
 
-func (m *MockConfig) IsTlsEnabled() bool {
+func (m *MockConfig) IsTLSEnabled() bool {
 	args := m.Called()
 	return args.Bool(0)
 }

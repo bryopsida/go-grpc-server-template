@@ -9,5 +9,5 @@ type IConfig interface {
 	GetServerCert() string
 	GetServerKey() string
 	GetServerCA() string
-	IsTlsEnabled() bool
+	IsTLSEnabled() bool
 }

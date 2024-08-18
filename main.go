@@ -38,7 +38,7 @@ func runGrpc(ctx context.Context, server *grpc.Server, lis net.Listener) {
 	server.GracefulStop()
 }
 
-func buildTlsCert(cert, key string) (*tls.Certificate, error) {
+func buildTLSCert(cert, key string) (*tls.Certificate, error) {
 	// Convert PEM strings to byte slices
 	certPEM := []byte(cert)
 	keyPEM := []byte(key)
@@ -59,7 +59,7 @@ func buildServerCredentials(config interfaces.IConfig) (credentials.TransportCre
 	if cert == "" || key == "" || ca == "" {
 		return nil, fmt.Errorf("missing required TLS configuration")
 	}
-	tlsCertificate, err := buildTlsCert(cert, key)
+	tlsCertificate, err := buildTLSCert(cert, key)
 	if err != nil {
 		return nil, fmt.Errorf("failed to build TLS certificate: %v", err)
 	}
@@ -69,7 +69,7 @@ func buildServerCredentials(config interfaces.IConfig) (credentials.TransportCre
 
 func buildGrpcOptions(config interfaces.IConfig) []grpc.ServerOption {
 	options := []grpc.ServerOption{}
-	if config.IsTlsEnabled() {
+	if config.IsTLSEnabled() {
 		creds, err := buildServerCredentials(config)
 		if err != nil {
 			log.Fatalf("failed to build server credentials: %v", err)

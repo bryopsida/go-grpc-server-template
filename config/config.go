@@ -14,13 +14,13 @@ const (
 	databasePathkey      = "database.path"
 	serverPortKey        = "server.port"
 	serverAddressKey     = "server.address"
-	serverTlsEnabledKey  = "server.tls.enabled"
-	serverTlsCertKey     = "server.tls.cert"
-	serverTlsCertPathKey = "server.tls.cert_path"
-	serverTlsKeyKey      = "server.tls.key"
-	serverTlsKeyPathKey  = "server.tls.key_path"
-	serverTlsCaKey       = "server.tls.ca"
-	serverTlsCaPathKey   = "server.tls.ca_path"
+	serverTLSEnabledKey  = "server.tls.enabled"
+	serverTLSCertKey     = "server.tls.cert"
+	serverTLSCertPathKey = "server.tls.cert_path"
+	serverTLSKeyKey      = "server.tls.key"
+	serverTLSKeyPathKey  = "server.tls.key_path"
+	serverTLSCaKey       = "server.tls.ca"
+	serverTLSCaPathKey   = "server.tls.ca_path"
 )
 
 type viperConfig struct {
@@ -39,13 +39,13 @@ func (c *viperConfig) setDefaults() {
 	c.viper.SetDefault(databasePathkey, path.Join("data", "db"))
 	c.viper.SetDefault(serverPortKey, 50051)
 	c.viper.SetDefault(serverAddressKey, "localhost")
-	c.viper.SetDefault(serverTlsEnabledKey, false)
-	c.viper.SetDefault(serverTlsCertKey, "")
-	c.viper.SetDefault(serverTlsCertPathKey, "")
-	c.viper.SetDefault(serverTlsKeyKey, "")
-	c.viper.SetDefault(serverTlsKeyPathKey, "")
-	c.viper.SetDefault(serverTlsCaKey, "")
-	c.viper.SetDefault(serverTlsCaPathKey, "")
+	c.viper.SetDefault(serverTLSEnabledKey, false)
+	c.viper.SetDefault(serverTLSCertKey, "")
+	c.viper.SetDefault(serverTLSCertPathKey, "")
+	c.viper.SetDefault(serverTLSKeyKey, "")
+	c.viper.SetDefault(serverTLSKeyPathKey, "")
+	c.viper.SetDefault(serverTLSCaKey, "")
+	c.viper.SetDefault(serverTLSCaPathKey, "")
 }
 
 func (c *viperConfig) initialize() {
@@ -89,23 +89,22 @@ func (c *viperConfig) ifNilTryPath(primaryKey string, pathKey string) string {
 			return string(content)
 		}
 		return ""
-	} else {
-		return c.viper.GetString(primaryKey)
 	}
+	return c.viper.GetString(primaryKey)
 }
 
 func (c *viperConfig) GetServerCert() string {
-	return c.ifNilTryPath(serverTlsCertKey, serverTlsCertPathKey)
+	return c.ifNilTryPath(serverTLSCertKey, serverTLSCertPathKey)
 }
 
 func (c *viperConfig) GetServerKey() string {
-	return c.ifNilTryPath(serverTlsKeyKey, serverTlsKeyPathKey)
+	return c.ifNilTryPath(serverTLSKeyKey, serverTLSKeyPathKey)
 }
 
 func (c *viperConfig) GetServerCA() string {
-	return c.ifNilTryPath(serverTlsCaKey, serverTlsCaPathKey)
+	return c.ifNilTryPath(serverTLSCaKey, serverTLSCaPathKey)
 }
 
-func (c *viperConfig) IsTlsEnabled() bool {
-	return c.viper.GetBool(serverTlsEnabledKey)
+func (c *viperConfig) IsTLSEnabled() bool {
+	return c.viper.GetBool(serverTLSEnabledKey)
 }

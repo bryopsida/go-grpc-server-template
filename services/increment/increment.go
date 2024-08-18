@@ -8,18 +8,18 @@ import (
 	"github.com/bryopsida/go-grpc-server-template/interfaces"
 )
 
-// IncrementServiceImpl is the implementation of IncrementServiceServer
-type IncrementServiceImpl struct {
+// ServiceImpl is the implementation of IncrementServiceServer
+type ServiceImpl struct {
 	api_v1.UnimplementedIncrementServiceServer
 	repo   interfaces.INumberRepository
 	bucket string
 }
 
-// NewIncrementService creates a new IncrementServiceImpl
+// NewIncrementService creates a new ServiceImpl
 // - repo: INumberRepository number repository
 // - bucket: string bucket name
-func NewIncrementService(repo interfaces.INumberRepository, bucket string) *IncrementServiceImpl {
-	return &IncrementServiceImpl{
+func NewIncrementService(repo interfaces.INumberRepository, bucket string) *ServiceImpl {
+	return &ServiceImpl{
 		repo:   repo,
 		bucket: bucket,
 	}
@@ -29,7 +29,7 @@ func NewIncrementService(repo interfaces.INumberRepository, bucket string) *Incr
 // - ctx: context.Context context
 // - req: *api_v1.IncrementRequest request
 // Returns *api_v1.IncrementResponse response
-func (s *IncrementServiceImpl) Increment(ctx context.Context, req *api_v1.IncrementRequest) (*api_v1.IncrementResponse, error) {
+func (s *ServiceImpl) Increment(ctx context.Context, req *api_v1.IncrementRequest) (*api_v1.IncrementResponse, error) {
 	number, err := s.repo.FindByID(s.bucket)
 	if err != nil {
 		slog.Info("Bucket not found, creating new bucket", "bucket", s.bucket)

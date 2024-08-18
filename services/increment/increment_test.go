@@ -84,9 +84,9 @@ func TestIncrement(t *testing.T) {
 		mockRepo.On("Save", mock.Anything).Return(interfaces.ErrSaveFailed)
 
 		req := &api_v1.IncrementRequest{}
-		resp, _ := service.Increment(context.Background(), req)
+		resp, err := service.Increment(context.Background(), req)
 
-		//assert.Error(t, err)
+		assert.Error(t, err)
 		assert.Nil(t, resp)
 		mockRepo.AssertExpectations(t)
 	})
