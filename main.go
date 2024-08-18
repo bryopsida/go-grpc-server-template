@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
-	"log"
 	"log/slog"
 	"net"
 	"os"
@@ -21,15 +20,16 @@ import (
 	"google.golang.org/grpc/credentials"
 )
 
-func serveGrpc(server *grpc.Server, lis net.Listener) {
+func serveGrpc(server interfaces.GrpcServer, lis net.Listener) {
 	address := lis.Addr().String()
 	slog.Info("Listening on ", "address", address)
 	if err := server.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+		slog.Error("failed to serve", "error", err)
+		panic(err.Error())
 	}
 }
 
-func runGrpc(ctx context.Context, server *grpc.Server, lis net.Listener) {
+func runGrpc(ctx context.Context, server interfaces.GrpcServer, lis net.Listener) {
 	go serveGrpc(server, lis)
 	// wait for cancel signal
 	<-ctx.Done()
@@ -72,7 +72,8 @@ func buildGrpcOptions(config interfaces.IConfig) []grpc.ServerOption {
 	if config.IsTLSEnabled() {
 		creds, err := buildServerCredentials(config)
 		if err != nil {
-			log.Fatalf("failed to build server credentials: %v", err)
+			slog.Error("failed to build server credentials", "error", err)
+			panic(err)
 		}
 		options = append(options, grpc.Creds(creds))
 	}
@@ -89,7 +90,8 @@ func main() {
 	slog.Info("Getting database")
 	db, err := datastore.GetDatabase(config)
 	if err != nil {
-		log.Fatalf("failed to get database: %v", err)
+		slog.Error("failed to get database", "error", err)
+		panic(err.Error())
 	}
 	defer db.Close()
 
@@ -109,7 +111,8 @@ func main() {
 	// Listen on a port
 	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", config.GetServerAddress(), config.GetServerPort()))
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		slog.Error("failed to listen", "error", err)
+		panic(err.Error())
 	}
 
 	// Create a context with cancellation
