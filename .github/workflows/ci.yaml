@@ -1,0 +1,27 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  validate:
+    permissions:
+      contents: read
+      actions: read
+      checks: write
+    uses: curium-rocks/flows/.github/workflows/golang.yml@main
+  image:
+    permissions:
+      packages: write
+      security-events: write
+      id-token: write
+      contents: read
+    needs:
+      - validate
+    uses: curium-rocks/flows/.github/workflows/oci-build-image.yml@main
+    with:
+      image_name: go-grpc-server
+      registry: ghcr.io/bryopsida
