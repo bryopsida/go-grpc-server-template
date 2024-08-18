@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package api.v1;
+
+option go_package = "api/v1;api_v1";
+
+service IncrementService {
+    rpc Increment (IncrementRequest) returns (IncrementResponse);
+}
+
+message IncrementRequest {}
+
+message IncrementResponse {
+    uint64 value = 1;
+}
