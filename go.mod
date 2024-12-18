@@ -5,7 +5,7 @@ go 1.22.6
 require (
 	github.com/dgraph-io/badger/v4 v4.5.0
 	github.com/stretchr/testify v1.10.0
-	google.golang.org/grpc v1.69.0
+	google.golang.org/grpc v1.69.2
 	google.golang.org/protobuf v1.36.0
 )
 
